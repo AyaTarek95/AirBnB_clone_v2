@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 import models
 from os import getenv
 import shlex
+from sqlalchemy.ext.declarative import declarative_base
 
 
 class Place(BaseModel, Base):
