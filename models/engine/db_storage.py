@@ -32,7 +32,6 @@ class DBStorage:
         if env == "test":
             Base.metadata.drop_all(self.__engine)
 
-
     def all(self, cls=None):
         """
         returns a dictionary
@@ -46,10 +45,10 @@ class DBStorage:
         else:
             all_objects = self.__session.query(cls).all()
 
-        result_dict = {"{}.{}".format(type(obj).__name__, obj.id):\
-                        obj for obj in all_objects}
+        result_dict = {"{}.{}".format(type(obj).__name__, obj.id):
+                       obj for obj in all_objects}
         return result_dict
-    
+
     def new(self, obj):
         """ add new elem to the table """
         self.__session.add(obj)
@@ -57,17 +56,18 @@ class DBStorage:
     def save(self):
         """ save the changes """
         self.__session.commit()
-    
+
     def delete(self, obj=None):
         """
             delete from the current database session
         """
-        if obj != None:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
         """ reload function """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
