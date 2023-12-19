@@ -6,7 +6,7 @@ from sqlalchemy import Column, String
 from models.place import place_amenity
 
 
-class Amenity(BaseModel):
+class Amenity(BaseModel, Base):
     '''Define Amenity class'''
     __tablename__ = 'amenities'
     name = Column(String(128), nullable=False)
