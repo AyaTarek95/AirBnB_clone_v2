@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-""" sqlAlchemy NEW DB File """
-from os import getenv
+""" sqlalchemy database """
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import (create_engine)
-from sqlalchemy.ext.declarative import declarative_base
+from os import getenv
 from models.base_model import Base
 from models.state import State
 from models.city import City
@@ -14,7 +14,7 @@ from models.amenity import Amenity
 
 
 class DBStorage:
-    """ create tables in environmental"""
+    """ Define dbstorage class"""
     __engine = None
     __session = None
 
@@ -34,9 +34,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """
-        returns a dictionary
-        Return:
-        returns a dictionary of __object
+        Returns all objects
         """
         if cls is None:
             all_objects = []
@@ -50,22 +48,22 @@ class DBStorage:
         return result_dict
 
     def new(self, obj):
-        """ add new elem to the table """
+        """ define add method  """
         self.__session.add(obj)
 
     def save(self):
-        """ save the changes """
+        """ defines save method """
         self.__session.commit()
 
     def delete(self, obj=None):
         """
-            delete from the current database session
+            defines delete method
         """
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
-        """ reload function """
+        """ Defines reload method """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
