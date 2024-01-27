@@ -21,7 +21,8 @@ def states_list():
     """displays the list of all State objects
     present in DBStorage sorted by name
     """
-    return render_template("7-states_list.html", states=storage.all(State))
+    states = storage.all(State)
+    return render_template("7-states_list.html", states=states)
 
 
 if __name__ == "__main__":
