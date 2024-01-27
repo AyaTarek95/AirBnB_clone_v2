@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-"""starts a Flask web application
-"""
+"""initialize flask web app"""
+
 from flask import Flask, render_template
 from models import storage
 from models.state import State
@@ -8,33 +8,22 @@ from models.state import State
 app = Flask(__name__)
 
 
+@app.route('/cities_by_states', strict_slashes=False)
+def cities_by_states():
+    """diplay HTML page with state and cities sorted"""
+    slist = sorted(storage.all(
+        State).values(), key=lambda x: x.name)
+
+    for s in slist:
+        s.cities.sort(key=lambda x: x.name)
+    return render_template("8-cities_by_states.html", sorted_states_list=slist)
+
+
 @app.teardown_appcontext
-def teardown_appcontext(exception):
-    """ remove the current SQLAlchemy Session
-    After each request
-    """
+def terminate(excep):
+    """close the storage after each request"""
     storage.close()
 
 
-@app.route("cities_by_states", strict_slashes=False)
-def cities_by_states():
-    """displays list of all State objects
-    present in DBStorage sorted by name
-    """
-    states = storage.all("State").sort("name")
-    states_list = []
-    for state in states:
-        city_list = []
-        if storage.engine.name == "db":
-            cities = state.cities
-        else:
-            cities = state.cities()
-        for city in cities.sort("name"):
-            city_list.append({"id": city.id, "name": city.name})
-        states_list.append({"id": state.id,
-                            "name": state.name, "cities": city_list})
-    return render_template("8-cities_by_states.html", states=states_list)
-
-
-if __name__ == "__main__":
-    app.run(port=5000, host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
