@@ -7,6 +7,7 @@ from models.state import State
 
 app = Flask(__name__)
 
+
 @app.teardown_appcontext
 def teardown_appcontext(exception):
     """ remove the current SQLAlchemy Session
@@ -30,7 +31,8 @@ def cities_by_states():
             cities = state.cities()
         for city in cities.sort("name"):
             city_list.append({"id": city.id, "name": city.name})
-        states_list.append({"id": state.id, "name": state.name, "cities": city_list})
+        states_list.append({"id": state.id,
+                            "name": state.name, "cities": city_list})
     return render_template("8-cities_by_states.html", states=states_list)
 
 
